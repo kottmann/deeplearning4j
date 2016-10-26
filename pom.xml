@@ -79,6 +79,14 @@
         <maven-scala-plugin.version>2.15.2</maven-scala-plugin.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>deeplearning4j-build-resources</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>testresources</id>
@@ -278,6 +286,12 @@
             </extension>
         </extensions>
 
+        <resources>
+            <resource>
+                <directory>${project.build.directory}/generated-resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -310,6 +324,25 @@
                             <goal>add-source</goal>
                             <goal>testCompile</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+           <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-dependency-plugin</artifactId>
+               <executions>
+                   <execution>
+                       <id>unpack-shared-resources</id>
+                       <goals>
+                           <goal>unpack-dependencies</goal>
+                       </goals>
+                       <phase>generate-resources</phase>
+                       <configuration>
+                           <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+                           <includeArtifactIds>deeplearning4j-build-resources</includeArtifactIds>
+                           <includeGroupIds>${project.groupId}</includeGroupIds>
+                           <excludeTransitive>true</excludeTransitive>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
